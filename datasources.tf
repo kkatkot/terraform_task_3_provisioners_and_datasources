@@ -19,6 +19,11 @@ data "azurerm_network_interface" "main" {
 
 }
 
+data "azurerm_public_ip" "main" {
+  name                = basename(data.azurerm_network_interface.main.ip_configuration[0].public_ip_address_id)
+  resource_group_name = data.azurerm_resource_group.example.name
+}
+
 data "azurerm_virtual_machine" "main" {
   name                = "${var.prefix}-vm"
   resource_group_name = data.azurerm_resource_group.example.name

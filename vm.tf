@@ -36,7 +36,7 @@
 #   }
 # }
 
-resource "null_resource" "configue_vm" {
+resource "null_resource" "configure_vm" {
 
   triggers = {
     vm_id = data.azurerm_virtual_machine.main.id
@@ -44,9 +44,9 @@ resource "null_resource" "configue_vm" {
 
   connection {
     type     = "ssh"
-    user     = "testadmin"
-    password = "Password1234!"
-    host     = data.azurerm_virtual_machine.main.public_ip_address
+    user     = var.admin_username
+    password = var.vm_admin_password
+    host     = data.azurerm_public_ip.main.ip_address
   }
 
   provisioner "file" {
@@ -59,7 +59,8 @@ resource "null_resource" "configue_vm" {
     inline = [
       "sudo apt update -y",
       "sudo apt install -y nginx",
-      "sudo mv /home/testadmin/index.html /var/www/html/index.html"
+      "sudo mv /home/testadmin/index.html /var/www/html/index.html",
+      "sudo systemctl enable --now nginx"
     ]
   }
 
